@@ -1,0 +1,85 @@
+DP入门题
+7 
+3 8 
+8 1 0 
+2 7 4 4 
+4 5 2 6 5
+给出了一个数字三角形。从三角形的顶部到底部有很多条不同的路径。对于每条路径，把路径上面的数加起来可以得到一个和，你的任务就是找到最大的和。 
+注意：路径上的每一步只能从一个数走到下一层上和它最近的左边的那个数或者右边的那个数。
+Input
+输入数据有多组，每组输入的是一行是一个整数N (1 < N <= 100)，给出三角形的行数。下面的N行给出数字三角形。数字三角形上的数的范围都在0和100之间。
+Output
+输出最大的和。
+Sample Input
+5
+7
+3 8
+8 1 0 
+2 7 4 4
+4 5 2 6 5
+3
+1
+2 3
+1 1 1
+Sample Output
+30
+5
+Hint
+dp
+
+
+基本思想是递推dp 采用打表的形式来实现
+有两种方法 一种是从头往下，依次将数组每一个位置的路径的值记录下来，最终取最后一行的最大值即为解。
+#include <iostream>
+#include <string.h>
+
+using namespace std;
+
+int main()
+{
+    int n,data[101][101],m;
+    while(cin>>n)
+    {
+        m=0;
+        memset(data,0,sizeof(data));
+        for(int i=1;i<=n;i++)
+         for(int j=1;j<=i;j++)
+           cin>>data[i][j];
+        for(int i=2;i<=n;i++)
+         for(int j=1;j<=i;j++)
+          data[i][j]+=max(data[i-1][j],data[i-1][j-1]);
+        for(int i=1;i<=n;i++)
+         if(m<data[n][i])
+           m=data[n][i];
+        cout<<m<<endl;
+    }
+    return 0;
+}
+
+第二种方式是自底向下，更加的便捷，从倒数第二行起，将当前路径的最大值打表，最终输出数组最开头元素级即可
+
+#include <iostream>
+#include <stdio.h>
+#include <algorithm>
+#include <cstring>
+#include <stdlib.h>
+
+using namespace std;
+int main()
+{
+	int n;
+	while(cin>>n)
+	{
+		int mat[105][105];
+		int Max = 0;
+		memset(mat,0,sizeof(mat));
+		for(int i = 0; i < n ; i++)
+			for(int j = 0; j <= i; j++)
+				cin>>mat[i][j];
+		for(int i = n-2; i >= 0; i--)//从倒数第二行开始 
+			for(int j = 0; j <= i; j++)
+				mat[i][j] += max(mat[i+1][j],mat[i+1][j+1]);
+		printf("%d",mat[0][0]);		
+	}
+	return 0;
+}
